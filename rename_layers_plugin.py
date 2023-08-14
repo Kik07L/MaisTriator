@@ -8,16 +8,17 @@ def get_layers():
         layers.append(layer)
     return layers
 
-# Renomme les calques en ajoutant un numéro à la fin
-def rename_layers(layers):
-    for i, layer in enumerate(layers):
-        new_name = f"Layer_{i + 1}"
+# Trie les calques par nom en utilisant la fonction sorted() et renomme
+def sort_and_rename_layers(layers):
+    sorted_layers = sorted(layers, key=lambda layer: layer.name)
+    for i, layer in enumerate(sorted_layers):
+        new_name = f"Layer_{chr(65 + i)}"  # Utilise les lettres de l'alphabet (A, B, C, ...)
         layer.name = new_name
 
 # Fonction principale
 def main():
     layers = get_layers()
-    rename_layers(layers)
+    sort_and_rename_layers(layers)
 
 if __name__ == "__main__":
     import clr
