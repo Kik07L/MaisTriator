@@ -1,15 +1,17 @@
+import os
 import torch
 import torchvision.models as models
 from PIL import Image
 from torchvision import transforms
 
-# Charger le modèle ResNet pré-entraîné
+# load resnet
 def load_resnet_model():
-    model = models.resnet50(pretrained=True)
-    # Le modèle sera téléchargé automatiquement s'il n'est pas déjà enregistré localement
+    model = models.resnet50()
+    model.load_state_dict(torch.load(os.path.join(os.path.dirname(__file__), "resnet_weights/resnet50_weights.pth")))
+    model.eval()
     return model
 
-# Fonction pour prédire la classe d'une image à l'aide de ResNet
+# tentative de prédi avec resnet ( pas sur que ca marche cette merde )
 def predict_class_resnet(image, model, class_names):
     transform = transforms.Compose([
         transforms.Resize(256),
@@ -28,16 +30,16 @@ def predict_class_resnet(image, model, class_names):
     class_name = class_names[class_idx]
     return class_name
 
-# Fonction principale du plugin
+# F1
 def main():
-    # Charger le modèle ResNet
+    # load resnet2
     resnet_model = load_resnet_model()
-    class_names = ["jambes", "corps", "visage"]  # Remplace par les noms de tes classes
+    class_names = ["jambes", "corps", "visage"]  # list des noms de classes
 
-    # Récupérer le document actif
+    # recup le projet actif ( pas sur que ce soit comme ca qu'on fait)
     doc = app.ActiveDocument
 
-    # Parcourir tous les calques du document
+    # lister les calques
     for layer in doc.Layers:
         # Vérifier si le calque est visible
         if not layer.Visible:
@@ -46,10 +48,10 @@ def main():
         # Récupérer l'image du calque
         image = layer.GetContentAsImage()
 
-        # Prédire la classe du contenu de l'image à l'aide de ResNet
+        # prédi resnet
         predicted_class = predict_class_resnet(image, resnet_model, class_names)
 
-        # Renommer le calque en utilisant la classe prédite
+        # rename le calque
         new_name = f"{layer.Name}_{predicted_class}"
         layer.Name = new_name
 
