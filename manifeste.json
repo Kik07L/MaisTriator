@@ -1,0 +1,7 @@
+{
+    "name": "MaisTriator",
+    "author": "Kik",
+    "version": "1.0",
+    "description": "Renomme les calques selon l'ordre de création.",
+    "main": "rename_layers_plugin.py"
+}
