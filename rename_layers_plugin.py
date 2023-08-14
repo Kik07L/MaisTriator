@@ -1,6 +1,5 @@
 import torch
 import torchvision.models as models
-import numpy as np
 from PIL import Image
 from torchvision import transforms
 
@@ -8,19 +7,10 @@ from torchvision import transforms
 def load_resnet_model():
     model = models.resnet50(pretrained=True)
     # Le modèle sera téléchargé automatiquement s'il n'est pas déjà enregistré localement
-
-    # Désactiver l'apprentissage pour les couches existantes
-    for param in model.parameters():
-        param.requires_grad = False
-
-    # Remplacer la dernière couche pour l'adapter au nombre de classes dans tes données
-    num_classes = 3  # Remplace 3 par le nombre de classes que tu as (par exemple, jambes, corps, visage)
-    model.fc = torch.nn.Linear(model.fc.in_features, num_classes)
-
     return model
 
-# Fonction pour prédire la classe d'une image
-def predict_class(image, model, class_names):
+# Fonction pour prédire la classe d'une image à l'aide de ResNet
+def predict_class_resnet(image, model, class_names):
     transform = transforms.Compose([
         transforms.Resize(256),
         transforms.CenterCrop(224),
@@ -56,8 +46,8 @@ def main():
         # Récupérer l'image du calque
         image = layer.GetContentAsImage()
 
-        # Prédire la classe du contenu de l'image
-        predicted_class = predict_class(image, resnet_model, class_names)
+        # Prédire la classe du contenu de l'image à l'aide de ResNet
+        predicted_class = predict_class_resnet(image, resnet_model, class_names)
 
         # Renommer le calque en utilisant la classe prédite
         new_name = f"{layer.Name}_{predicted_class}"
