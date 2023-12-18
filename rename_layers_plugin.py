@@ -64,3 +64,4 @@ if __name__ == "__main__":
     from Autodesk.ClipStudio import *
 
     main()
+# mais il a di : oublipa de fair une catégorie exprè line exprè colo et exprè sketch
